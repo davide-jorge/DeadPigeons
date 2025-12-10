@@ -1,5 +1,10 @@
+#!/bin/bash
+set -a
+source .env
+set +a
+
 dotnet ef dbcontext scaffold \
-  "Host=ep-gentle-term-a4savj6o-pooler.us-east-1.aws.neon.tech; Database=neondb; Username=neondb_owner; Password=npg_2gdsDUHtbx7W; SSL Mode=VerifyFull; Channel Binding=Require;" \
+  "$CONN_STR" \
   Npgsql.EntityFrameworkCore.PostgreSQL \
   --output-dir ./Models \
   --context-dir . \
