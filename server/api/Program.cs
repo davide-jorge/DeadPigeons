@@ -1,20 +1,30 @@
+using System.Text.Json;
+using api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using efscaffold;
 using efscaffold.Models;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var appOptions = builder.Services.AddAppOptions(builder.Configuration);
+
+Console.WriteLine(JsonSerializer.Serialize(appOptions));
 
 builder.Services.AddDbContext<MyDbContext>((serviceProvider, opts) =>
 {
     opts.UseNpgsql(
-        builder.Configuration.GetValue<string>("Db")
+        appOptions.DbConnectionString
     );
 });
 
 var app = builder.Build();
 
-app.MapGet("/", ([FromServices] MyDbContext context) =>
+app.MapGet("/", (
+    
+    [FromServices] IOptionsMonitor<AppOptions> optionsMonitor,
+    [FromServices] MyDbContext context) =>
 {
     var myUser = new User()
     {
