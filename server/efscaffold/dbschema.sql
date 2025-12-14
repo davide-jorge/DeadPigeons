@@ -9,7 +9,7 @@ create table dead_pigeons.players(
                                      name text not null,
                                      phone text not null,
                                      email text not null,
-                                     created_at timestamp with time zone not null,
+                                     created_at timestamp not null,
                                      is_active boolean default true not null
 );
 
@@ -18,7 +18,7 @@ create table dead_pigeons.users(
                                    name text not null,
                                    password_hash text not null,
                                    role text not null,
-                                   created_at timestamp with time zone not null
+                                   created_at timestamp not null
 );
 
 create table dead_pigeons.transactions(
@@ -26,7 +26,7 @@ create table dead_pigeons.transactions(
                                           player_id uuid references dead_pigeons.players(id) not null,
                                           amount numeric(10,2) not null,
                                           mp_reference text not null unique, -- MobilePay transaction ID
-                                          created_at timestamp without time zone not null default now()
+                                          created_at timestamp not null
 );
 
 create table dead_pigeons.games(
@@ -43,7 +43,7 @@ create table dead_pigeons.boards(
                                     number_of_fields int not null check (number_of_fields between 5 and 8), -- 5 to 8 numbers on board
                                     price numeric(10,2) not null, -- 20, 40, 80, or 160 DKK
                                     numbers int[] not null,
-                                    created_at timestamp with time zone not null default now()
+                                    created_at timestamp not null
 );
 
 create table dead_pigeons.winners(
