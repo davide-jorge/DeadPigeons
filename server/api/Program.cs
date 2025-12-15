@@ -19,7 +19,15 @@ builder.Services.AddDbContext<MyDbContext>((serviceProvider, opts) =>
     );
 });
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+app.UseCors(config => config
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true));
 
 app.MapGet("/", (
     
