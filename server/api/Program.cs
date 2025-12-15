@@ -19,9 +19,16 @@ builder.Services.AddDbContext<MyDbContext>((serviceProvider, opts) =>
     );
 });
 
+builder.Services.AddControllers();
+builder.Services.AddOpenApiDocument();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddCors();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 app.UseCors(config => config
     .AllowAnyOrigin()
@@ -29,23 +36,9 @@ app.UseCors(config => config
     .AllowAnyHeader()
     .SetIsOriginAllowed(origin => true));
 
-app.MapGet("/", (
-    
-    [FromServices] IOptionsMonitor<AppOptions> optionsMonitor,
-    [FromServices] MyDbContext context) =>
-{
-    var myUser = new User()
-    {
-        Id = Guid.NewGuid(),
-        Name = "John Doe",
-        PasswordHash = "hgyt654htyr4",
-        Role = "Admin",
-        CreatedAt = DateTime.Now,
-    };
-    context.Users.Add(myUser);
-    context.SaveChanges();
-    var objects = context.Users.ToList();
-    return objects;
-});
+app.MapControllers();
+
+app.UseOpenApi();
+app.UseSwaggerUi();
 
 app.Run();
